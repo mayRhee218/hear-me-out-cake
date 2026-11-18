@@ -184,42 +184,22 @@ button:focus-visible, a:focus-visible {
   font-weight: 600;
 }
 
-.preview-add {
-  position: absolute;
-  z-index: 4;
-  bottom: 17px;
-  left: 19px;
-  display: inline-flex;
-  min-height: 36px;
-  align-items: center;
-  gap: 5px;
-  padding: 4px 10px;
-  border: 1px solid #e9daef;
-  border-radius: 99px;
-  background: #fffcfa;
-  color: #7040a6;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.preview-add:hover { background: #f4eafb; }
-
 .stage { width: 100%; container-type: inline-size; }
 .cake-canvas { pointer-events: none; }
 .stage-sparkle { position: absolute; color: #b58acb; font-family: Georgia, serif; line-height: 1; }
-.sparkle-left { top: 51%; left: 15%; font-size: clamp(14px, 3.5cqw, 26px); transform: rotate(-6deg); }
-.sparkle-right { top: 42%; right: 14%; font-size: clamp(12px, 2.7cqw, 21px); transform: rotate(9deg); }
-.sparkle-small { top: 36%; right: 18%; color: #c8a2d9; font-size: 16px; }
-.sparkle-tiny { top: 56%; left: 19%; color: #cca7dc; font-size: 25px; }
+.sparkle-left { top: 78%; left: 16%; font-size: clamp(14px, 3.5cqw, 26px); transform: rotate(-6deg); }
+.sparkle-right { top: 81%; right: 15%; font-size: clamp(12px, 2.7cqw, 21px); transform: rotate(9deg); }
+.sparkle-small { top: 77%; right: 19%; color: #c8a2d9; font-size: 16px; }
+.sparkle-tiny { top: 83%; left: 20%; color: #cca7dc; font-size: 25px; }
 
-.topper-position, .topper-set { position: absolute; inset: 0; pointer-events: none; }
-.topper-position.has-photo { z-index: 2; }
-.topper-set { animation: insert-topper 430ms cubic-bezier(.24,.74,.28,1) both; }
+.topper-position { position: absolute; inset: 0; pointer-events: none; }
+.topper-stick, .photo-flag { animation: insert-topper 370ms cubic-bezier(.24,.74,.28,1) both; }
 .topper-stick, .empty-stick {
   position: absolute;
+  z-index: 1;
   top: var(--topper-y);
   left: var(--topper-x);
-  width: clamp(2px, .6cqw, 5px);
+  width: clamp(1px, .38cqw, 3px);
   height: var(--stick-length);
   transform: translateX(-50%) rotate(var(--stick-tilt, 0deg));
   transform-origin: top center;
@@ -250,6 +230,7 @@ button:focus-visible, a:focus-visible {
 
 .stage-slot, .photo-flag {
   position: absolute;
+  z-index: 2;
   top: var(--topper-y);
   left: var(--topper-x);
   display: grid;
@@ -258,7 +239,7 @@ button:focus-visible, a:focus-visible {
 }
 
 .stage-slot {
-  width: clamp(29px, 7.5cqw, 50px);
+  width: clamp(23px, 6.5cqw, 54px);
   aspect-ratio: 1;
   border: 1.5px dashed #a983bd;
   border-radius: 50%;
@@ -269,10 +250,10 @@ button:focus-visible, a:focus-visible {
   transition: transform 190ms ease, color 190ms ease, background 190ms ease;
 }
 
+.stage-slot svg { width: clamp(12px, 2.35cqw, 18px); height: auto; }
+.stage-slot:focus-visible, .photo-flag:focus-visible { z-index: 3; }
 .stage-slot:hover { transform: translate(-50%, -50%) scale(1.11); background: #fff; color: #633595; }
 .stage-slot:active { transform: translate(-50%, -50%) scale(.94); }
-.stage-crowded .stage-slot { width: max(23px, calc(var(--flag-width) * 100cqw / 684)); }
-.stage-crowded .topper-stick { width: clamp(1px, .38cqw, 3px); }
 
 .photo-flag {
   width: calc(var(--flag-width) * 100cqw / 684);
@@ -483,16 +464,14 @@ button:focus-visible, a:focus-visible {
   100% { border-radius: 0; transform: scale(1); }
 }
 @keyframes insert-topper {
-  0% { opacity: 0; transform: translateY(-7%); }
-  70% { opacity: 1; transform: translateY(.8%); }
-  100% { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; translate: var(--insert-from-x) var(--insert-from-y); }
+  to { opacity: 1; translate: 0 0; }
 }
 
 @media (max-width: 960px) {
   .header-inner { padding-inline: 32px; }
   .main-content { width: calc(100% - 60px); }
   .builder { gap: 16px; }
-  .cake-board-crowded .preview-tag { display: none; }
   .controls { padding: 23px 21px 13px; }
   .swatch { width: 36px; }
   .frosting-section { padding-bottom: 20px; }
@@ -513,11 +492,10 @@ button:focus-visible, a:focus-visible {
   .hero p { margin-top: 10px; font-size: 14px; }
   .builder { grid-template-columns: 1fr; gap: 13px; }
   .cake-board { border-radius: 20px; }
-  .preview-tag { top: 11px; left: 11px; padding: 5px 8px; font-size: 10px; }
+  .preview-tag { top: auto; bottom: 7px; left: 9px; padding: 5px 8px; font-size: 10px; }
   .preview-tag span { width: 6px; height: 6px; }
   .preview-foot { right: 7px; bottom: 5px; font-size: 10px; }
   .preview-foot svg { width: 12px; }
-  .preview-add { left: 7px; bottom: 5px; min-height: 32px; font-size: 11px; }
   .controls { border-radius: 19px; padding: 17px 17px 10px; }
   .swatch-list { justify-content: start; gap: clamp(10px, 4vw, 20px); margin-block: 15px 2px; }
   .swatch { width: clamp(31px, 9vw, 42px); }

@@ -1,16 +1,36 @@
-import { useEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import type { ChangeEvent, CSSProperties } from 'react'
 import {
   Cake, Check, CircleHelp, Download, ImagePlus, Images, LoaderCircle,
   Palette, Plus, RefreshCw, RotateCcw, Sparkles, Trash2, X,
 } from 'lucide-react'
-import { CAKE_SCENE, FROSTINGS, TOPPER_COUNT, drawCake, getTopperLayout, renderCakeExport } from './cake'
+import { CAKE_SCENE, FROSTINGS, TOPPER_COUNT, TOPPER_LAYOUT, drawCake, renderCakeExport } from './cake'
 import type { Frosting } from './cake'
 import { downloadCake, preparePhoto } from './photos'
 import type { CakePhoto } from './photos'
 
 const emptyCake = () => Array.from({ length: TOPPER_COUNT }, () => null)
 const toPercent = (fraction: number) => `${fraction * 100}%`
+const topperStyles = TOPPER_LAYOUT.positions.map((position): CSSProperties => {
+  const stickX = (position.targetX - position.x) * CAKE_SCENE.width
+  const stickY = (position.targetY - position.y) * CAKE_SCENE.height
+  const stickLength = Math.hypot(stickX, stickY)
+  const { flag } = TOPPER_LAYOUT
+
+  return {
+    '--topper-x': toPercent(position.x),
+    '--topper-y': toPercent(position.y),
+    '--stick-length': toPercent(stickLength / CAKE_SCENE.height),
+    '--stick-tilt': `${Math.atan2(-stickX, stickY) * 180 / Math.PI}deg`,
+    '--insert-from-x': `${-3 * stickX / stickLength}cqw`,
+    '--insert-from-y': `${-3 * stickY / stickLength}cqw`,
+    '--flag-width': flag.width,
+    '--flag-height': flag.height,
+    '--flag-border': flag.border,
+    '--flag-radius': flag.radius,
+    '--tilt': `${position.tilt}deg`,
+  } as CSSProperties
+})
 
 type Dialog = { kind: 'help' } | { kind: 'edit'; slot: number } | { kind: 'reset' }
 
@@ -26,10 +46,6 @@ type CakeBoardProps = {
 function CakeBoard({ frosting, photos, busy, onSlot, onImage, onArtError }: CakeBoardProps) {
   const canvas = useRef<HTMLCanvasElement>(null)
   const [image, setImage] = useState<HTMLImageElement | null>(null)
-  const occupiedExtent = photos.reduce((extent, photo, slot) => photo ? slot + 1 : extent, 0)
-  const { positions, flag } = getTopperLayout(occupiedExtent)
-  const nextSlot = photos.findIndex((photo) => !photo)
-  const compact = positions.length < TOPPER_COUNT
 
   useEffect(() => {
     const preview = canvas.current
@@ -45,9 +61,9 @@ function CakeBoard({ frosting, photos, busy, onSlot, onImage, onArtError }: Cake
   }, [image, frosting])
 
   return (
-    <section className={`cake-board relative isolate ${compact ? '' : 'cake-board-crowded'}`} aria-label="Live cake preview">
+    <section className="cake-board relative isolate" aria-label="Live cake preview">
       <div className="preview-tag"><span /> Live preview</div>
-      <div className={`stage relative ${compact ? '' : 'stage-crowded'}`} style={{ aspectRatio: `${CAKE_SCENE.width} / ${CAKE_SCENE.height}` }}>
+      <div className="stage relative" style={{ aspectRatio: `${CAKE_SCENE.width} / ${CAKE_SCENE.height}` }}>
         <span className="stage-sparkle sparkle-left" aria-hidden="true">✧</span>
         <span className="stage-sparkle sparkle-right" aria-hidden="true">✦</span>
         <span className="stage-sparkle sparkle-small" aria-hidden="true">✧</span>
@@ -71,35 +87,20 @@ function CakeBoard({ frosting, photos, busy, onSlot, onImage, onArtError }: Cake
           role="img"
           aria-label={`${frosting.name} cake on a white stand`}
         />
-        {positions.map((position, slot) => {
+        {topperStyles.map((style, slot) => {
           const photo = photos[slot]
-          if (!photo && !compact && slot !== nextSlot) return null
-
           const pending = busy.includes(slot)
-          const stickX = (position.targetX - position.x) * CAKE_SCENE.width
-          const stickY = (position.targetY - position.y) * CAKE_SCENE.height
-          const style = {
-            '--topper-x': toPercent(position.x),
-            '--topper-y': toPercent(position.y),
-            '--stick-length': toPercent(Math.hypot(stickX, stickY) / CAKE_SCENE.height),
-            '--stick-tilt': `${Math.atan2(-stickX, stickY) * 180 / Math.PI}deg`,
-            '--flag-width': flag.width,
-            '--flag-height': flag.height,
-            '--flag-border': flag.border,
-            '--flag-radius': flag.radius,
-            '--tilt': `${position.tilt}deg`,
-          } as CSSProperties
 
           return (
-            <div className={`topper-position ${photo ? 'has-photo' : ''}`} key={slot} style={style}>
+            <div className="topper-position" key={slot} style={style}>
               {photo ? (
-                <div className="topper-set" key={photo.source}>
+                <Fragment key={photo.source}>
                   <span className="topper-stick" aria-hidden="true" />
                   <button className="photo-flag" type="button" onClick={() => onSlot(slot)} disabled={pending}
                     aria-label={`Edit topper ${slot + 1}`}>
                     <img src={photo.source} alt={`Photo on topper ${slot + 1}`} draggable={false} />
                   </button>
-                </div>
+                </Fragment>
               ) : (
                 <>
                   <span className="empty-stick" aria-hidden="true" />
@@ -113,12 +114,6 @@ function CakeBoard({ frosting, photos, busy, onSlot, onImage, onArtError }: Cake
           )
         })}
       </div>
-      {nextSlot >= positions.length && (
-        <button className="preview-add" type="button" onClick={() => onSlot(nextSlot)} disabled={busy.includes(nextSlot)}>
-          {busy.includes(nextSlot) ? <LoaderCircle className="spinner" size={15} /> : <Plus size={15} />}
-          Add photo
-        </button>
-      )}
       <div className="preview-foot"><Sparkles size={14} /> {frosting.name} frosting</div>
     </section>
   )

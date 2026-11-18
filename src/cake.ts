@@ -24,52 +24,35 @@ type TopperPosition = {
 type FlagDimensions = { width: number; height: number; border: number; radius: number };
 type TopperLayout = { positions: readonly TopperPosition[]; flag: FlagDimensions };
 
-const starterLayout: TopperLayout = {
-  flag: { width: 70, height: 63, border: 4, radius: 12 },
+export const TOPPER_LAYOUT: TopperLayout = {
+  flag: { width: 64, height: 54, border: 3.5, radius: 10 },
   positions: [
-    { x: 0.5, y: 0.173, targetX: 0.5, targetY: 0.397, tilt: -4 },
-    { x: 0.416, y: 0.315, targetX: 0.416, targetY: 0.487, tilt: -7 },
-    { x: 0.584, y: 0.315, targetX: 0.584, targetY: 0.487, tilt: 5 },
-    { x: 0.334, y: 0.214, targetX: 0.334, targetY: 0.418, tilt: -7 },
-    { x: 0.666, y: 0.214, targetX: 0.666, targetY: 0.418, tilt: 8 },
-    { x: 0.255, y: 0.342, targetX: 0.255, targetY: 0.443, tilt: -9 },
-    { x: 0.745, y: 0.342, targetX: 0.745, targetY: 0.443, tilt: 8 },
+    // Fill the top first, beginning with the center and moving outward.
+    { x: 0.5, y: 0.318, targetX: 0.5, targetY: 0.472, tilt: -3 },
+    { x: 0.405, y: 0.207, targetX: 0.409, targetY: 0.424, tilt: -6 },
+    { x: 0.591, y: 0.205, targetX: 0.586, targetY: 0.42, tilt: 5 },
+    { x: 0.368, y: 0.331, targetX: 0.388, targetY: 0.481, tilt: -5 },
+    { x: 0.631, y: 0.334, targetX: 0.618, targetY: 0.481, tilt: 6 },
+    { x: 0.502, y: 0.072, targetX: 0.501, targetY: 0.376, tilt: 2 },
+    { x: 0.352, y: 0.093, targetX: 0.368, targetY: 0.393, tilt: -7 },
+    { x: 0.648, y: 0.094, targetX: 0.638, targetY: 0.392, tilt: 6 },
+    { x: 0.225, y: 0.218, targetX: 0.321, targetY: 0.428, tilt: -8 },
+    { x: 0.771, y: 0.221, targetX: 0.677, targetY: 0.428, tilt: 8 },
+    { x: 0.235, y: 0.343, targetX: 0.27, targetY: 0.476, tilt: -7 },
+    { x: 0.762, y: 0.345, targetX: 0.737, targetY: 0.478, tilt: 5 },
+    // Side sticks end in the buttercream, above the plate and stand.
+    { x: 0.132, y: 0.427, targetX: 0.25, targetY: 0.469, tilt: -9 },
+    { x: 0.871, y: 0.426, targetX: 0.751, targetY: 0.47, tilt: 7 },
+    { x: 0.107, y: 0.545, targetX: 0.258, targetY: 0.549, tilt: -5 },
+    { x: 0.891, y: 0.545, targetX: 0.742, targetY: 0.55, tilt: 6 },
+    { x: 0.127, y: 0.657, targetX: 0.249, targetY: 0.643, tilt: 6 },
+    { x: 0.868, y: 0.657, targetX: 0.751, targetY: 0.646, tilt: -5 },
+    { x: 0.176, y: 0.776, targetX: 0.29, targetY: 0.707, tilt: -8 },
+    { x: 0.826, y: 0.775, targetX: 0.711, targetY: 0.705, tilt: 7 },
   ],
 };
 
-const fullLayout: TopperLayout = {
-  flag: { width: 52, height: 44, border: 3, radius: 9 },
-  // Stagger card heights and pin the sticks to different parts of the cake's top.
-  // Slot order fills the center and both sides before filling the gaps.
-  positions: [
-    { x: 0.505, y: 0.06, targetX: 0.50, targetY: 0.378, tilt: -3 },
-    { x: 0.396, y: 0.369, targetX: 0.397, targetY: 0.494, tilt: -6 },
-    { x: 0.632, y: 0.386, targetX: 0.627, targetY: 0.492, tilt: 5 },
-    { x: 0.365, y: 0.166, targetX: 0.369, targetY: 0.415, tilt: -6 },
-    { x: 0.638, y: 0.169, targetX: 0.629, targetY: 0.415, tilt: 3 },
-    { x: 0.219, y: 0.313, targetX: 0.265, targetY: 0.455, tilt: -8 },
-    { x: 0.779, y: 0.321, targetX: 0.738, targetY: 0.459, tilt: 8 },
-    { x: 0.515, y: 0.366, targetX: 0.514, targetY: 0.503, tilt: 4 },
-    { x: 0.487, y: 0.159, targetX: 0.491, targetY: 0.408, tilt: 4 },
-    { x: 0.337, y: 0.277, targetX: 0.351, targetY: 0.454, tilt: -4 },
-    { x: 0.602, y: 0.28, targetX: 0.611, targetY: 0.454, tilt: -5 },
-    { x: 0.46, y: 0.263, targetX: 0.464, targetY: 0.453, tilt: 3 },
-    { x: 0.278, y: 0.097, targetX: 0.291, targetY: 0.397, tilt: -7 },
-    { x: 0.729, y: 0.103, targetX: 0.711, targetY: 0.4, tilt: 9 },
-    { x: 0.218, y: 0.202, targetX: 0.259, targetY: 0.434, tilt: -9 },
-    { x: 0.775, y: 0.211, targetX: 0.741, targetY: 0.444, tilt: 6 },
-    { x: 0.287, y: 0.394, targetX: 0.306, targetY: 0.473, tilt: -7 },
-    { x: 0.716, y: 0.407, targetX: 0.685, targetY: 0.483, tilt: 6 },
-    { x: 0.391, y: 0.072, targetX: 0.397, targetY: 0.38, tilt: 3 },
-    { x: 0.618, y: 0.076, targetX: 0.611, targetY: 0.374, tilt: 5 },
-  ],
-};
-
-export const TOPPER_COUNT = fullLayout.positions.length;
-
-export function getTopperLayout(occupiedExtent: number): TopperLayout {
-  return occupiedExtent <= starterLayout.positions.length ? starterLayout : fullLayout;
-}
+export const TOPPER_COUNT = TOPPER_LAYOUT.positions.length;
 
 const CAKE_BOUNDS = { x: 0.205, y: 0.29, width: 0.59, height: 0.64 };
 const STAGE_COLOR = '#f3edf9';
@@ -266,9 +249,7 @@ export async function renderCakeExport(
   const context = canvas.getContext('2d');
   if (!context) throw new Error('Cake downloads are unavailable in this browser.');
 
-  const occupiedExtent = photos.reduce((extent, photo, index) => photo ? index + 1 : extent, 0);
-  const layout = getTopperLayout(occupiedExtent);
-  const toppers = await Promise.all(layout.positions.map(async (position, index) => {
+  const toppers = await Promise.all(TOPPER_LAYOUT.positions.map(async (position, index) => {
     const photo = photos[index];
     if (!photo) return null;
 
@@ -285,6 +266,6 @@ export async function renderCakeExport(
   context.fillRect(0, 0, width, height);
   drawCakeArt(context, image, frosting);
   for (const { position } of visibleToppers) drawStick(context, position);
-  for (const { position, flag } of visibleToppers) drawFlag(context, position, flag, layout.flag);
+  for (const { position, flag } of visibleToppers) drawFlag(context, position, flag, TOPPER_LAYOUT.flag);
   return canvas;
 }
