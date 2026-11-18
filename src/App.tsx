@@ -4,7 +4,6 @@ import {
   Cake, Check, CircleHelp, Download, ImagePlus, Images, LoaderCircle,
   Palette, Plus, RefreshCw, RotateCcw, Sparkles, Trash2, X,
 } from 'lucide-react'
-import { AdsenseBanner } from './AdsenseBanner'
 import { CAKE_SCENE, FROSTINGS, TOPPER_COUNT, drawCake, getTopperLayout, renderCakeExport } from './cake'
 import type { Frosting } from './cake'
 import { downloadCake, preparePhoto } from './photos'
@@ -55,6 +54,7 @@ function CakeBoard({ frosting, photos, busy, onSlot, onImage, onArtError }: Cake
         <span className="stage-sparkle sparkle-tiny" aria-hidden="true">·</span>
         <img
           className="hidden"
+          crossOrigin="anonymous"
           src="./cake.webp"
           alt=""
           onLoad={(event) => {
@@ -165,7 +165,9 @@ export function App() {
   }
 
   async function handlePhoto(event: ChangeEvent<HTMLInputElement>) {
-    const file = event.currentTarget.files?.[0]
+    const input = event.currentTarget
+    const file = input.files?.[0]
+    input.value = ''
     const slot = pickerSlot.current
     pickerSlot.current = null
     if (!file || slot === null) return
@@ -308,11 +310,6 @@ export function App() {
             </div>
           </section>
         </div>
-
-        <footer className="page-footer">
-          <p>Your photos stay on this device.</p>
-          <AdsenseBanner />
-        </footer>
       </main>
 
       <input ref={fileInput} type="file" accept="image/*,.heic,.heif" className="sr-only" tabIndex={-1}
