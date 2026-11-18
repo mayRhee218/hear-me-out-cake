@@ -4,12 +4,13 @@ import {
   Cake, Check, CircleHelp, Download, ImagePlus, Images, LoaderCircle,
   Palette, Plus, RefreshCw, RotateCcw, Sparkles, Trash2, X,
 } from 'lucide-react'
-import { CAKE_SCENE, FROSTINGS, TOPPER_FLAG, TOPPER_POSITIONS, drawCake, renderCakeExport } from './cake'
+import { AdsenseBanner } from './AdsenseBanner'
+import { CAKE_SCENE, FROSTINGS, TOPPER_COUNT, drawCake, getTopperLayout, renderCakeExport } from './cake'
 import type { Frosting } from './cake'
 import { downloadCake, preparePhoto } from './photos'
 import type { CakePhoto } from './photos'
 
-const emptyCake = () => TOPPER_POSITIONS.map(() => null)
+const emptyCake = () => Array.from({ length: TOPPER_COUNT }, () => null)
 const toPercent = (fraction: number) => `${fraction * 100}%`
 
 type Dialog = { kind: 'help' } | { kind: 'edit'; slot: number } | { kind: 'reset' }
@@ -26,6 +27,10 @@ type CakeBoardProps = {
 function CakeBoard({ frosting, photos, busy, onSlot, onImage, onArtError }: CakeBoardProps) {
   const canvas = useRef<HTMLCanvasElement>(null)
   const [image, setImage] = useState<HTMLImageElement | null>(null)
+  const occupiedExtent = photos.reduce((extent, photo, slot) => photo ? slot + 1 : extent, 0)
+  const { positions, flag } = getTopperLayout(occupiedExtent)
+  const nextSlot = photos.findIndex((photo) => !photo)
+  const compact = positions.length < TOPPER_COUNT
 
   useEffect(() => {
     const preview = canvas.current
@@ -41,9 +46,9 @@ function CakeBoard({ frosting, photos, busy, onSlot, onImage, onArtError }: Cake
   }, [image, frosting])
 
   return (
-    <section className="cake-board relative isolate" aria-label="Live cake preview">
+    <section className={`cake-board relative isolate ${compact ? '' : 'cake-board-crowded'}`} aria-label="Live cake preview">
       <div className="preview-tag"><span /> Live preview</div>
-      <div className="stage relative" style={{ aspectRatio: `${CAKE_SCENE.width} / ${CAKE_SCENE.height}` }}>
+      <div className={`stage relative ${compact ? '' : 'stage-crowded'}`} style={{ aspectRatio: `${CAKE_SCENE.width} / ${CAKE_SCENE.height}` }}>
         <span className="stage-sparkle sparkle-left" aria-hidden="true">✧</span>
         <span className="stage-sparkle sparkle-right" aria-hidden="true">✦</span>
         <span className="stage-sparkle sparkle-small" aria-hidden="true">✧</span>
@@ -66,17 +71,22 @@ function CakeBoard({ frosting, photos, busy, onSlot, onImage, onArtError }: Cake
           role="img"
           aria-label={`${frosting.name} cake on a white stand`}
         />
-        {TOPPER_POSITIONS.map((position, slot) => {
+        {positions.map((position, slot) => {
           const photo = photos[slot]
+          if (!photo && !compact && slot !== nextSlot) return null
+
           const pending = busy.includes(slot)
+          const stickX = (position.targetX - position.x) * CAKE_SCENE.width
+          const stickY = (position.targetY - position.y) * CAKE_SCENE.height
           const style = {
             '--topper-x': toPercent(position.x),
             '--topper-y': toPercent(position.y),
-            '--stick-length': toPercent(position.targetY - position.y),
-            '--flag-width': TOPPER_FLAG.width,
-            '--flag-height': TOPPER_FLAG.height,
-            '--flag-border': TOPPER_FLAG.border,
-            '--flag-radius': TOPPER_FLAG.radius,
+            '--stick-length': toPercent(Math.hypot(stickX, stickY) / CAKE_SCENE.height),
+            '--stick-tilt': `${Math.atan2(-stickX, stickY) * 180 / Math.PI}deg`,
+            '--flag-width': flag.width,
+            '--flag-height': flag.height,
+            '--flag-border': flag.border,
+            '--flag-radius': flag.radius,
             '--tilt': `${position.tilt}deg`,
           } as CSSProperties
 
@@ -103,6 +113,12 @@ function CakeBoard({ frosting, photos, busy, onSlot, onImage, onArtError }: Cake
           )
         })}
       </div>
+      {nextSlot >= positions.length && (
+        <button className="preview-add" type="button" onClick={() => onSlot(nextSlot)} disabled={busy.includes(nextSlot)}>
+          {busy.includes(nextSlot) ? <LoaderCircle className="spinner" size={15} /> : <Plus size={15} />}
+          Add photo
+        </button>
+      )}
       <div className="preview-foot"><Sparkles size={14} /> {frosting.name} frosting</div>
     </section>
   )
@@ -255,7 +271,7 @@ export function App() {
             <div className="control-section photo-section">
               <div className="section-heading flex items-center justify-between">
                 <h2><Images size={20} aria-hidden="true" /> Add your people</h2>
-                <span className="count" aria-label={`${count} of 7 photo slots filled`}>{count}/7</span>
+                <span className="count" aria-label={`${count} of ${TOPPER_COUNT} photo slots filled`}>{count}/{TOPPER_COUNT}</span>
               </div>
               <p className="slot-hint">Tap a slot to add or edit a photo.</p>
               <div className="slot-grid grid" role="group" aria-label="Photo slots">
@@ -293,7 +309,10 @@ export function App() {
           </section>
         </div>
 
-        <footer className="page-footer">Your photos stay on this device.</footer>
+        <footer className="page-footer">
+          <p>Your photos stay on this device.</p>
+          <AdsenseBanner />
+        </footer>
       </main>
 
       <input ref={fileInput} type="file" accept="image/*,.heic,.heif" className="sr-only" tabIndex={-1}
@@ -314,7 +333,7 @@ export function App() {
             <h2 id="dialog-title">How it works</h2>
             <ol>
               <li>Pick a frosting color.</li>
-              <li>Tap a plus to add a photo and watch it land on the cake. Add up to seven.</li>
+              <li>Tap a plus to add a photo and watch it land on the cake. Add up to {TOPPER_COUNT}.</li>
               <li>Tap any photo to replace or remove it. Download the cake when it’s ready.</li>
             </ol>
             <button className="download-button" type="button" onClick={dismissDialog}>Start decorating</button>

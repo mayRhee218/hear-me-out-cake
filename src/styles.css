@@ -175,6 +175,26 @@ button:focus-visible, a:focus-visible {
   font-weight: 600;
 }
 
+.preview-add {
+  position: absolute;
+  z-index: 4;
+  bottom: 17px;
+  left: 19px;
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border: 1px solid #e9daef;
+  border-radius: 99px;
+  background: #fffcfa;
+  color: #7040a6;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.preview-add:hover { background: #f4eafb; }
+
 .stage { width: 100%; container-type: inline-size; }
 .cake-canvas { pointer-events: none; }
 .stage-sparkle { position: absolute; color: #b58acb; font-family: Georgia, serif; line-height: 1; }
@@ -192,7 +212,8 @@ button:focus-visible, a:focus-visible {
   left: var(--topper-x);
   width: clamp(2px, .6cqw, 5px);
   height: var(--stick-length);
-  transform: translateX(-50%);
+  transform: translateX(-50%) rotate(var(--stick-tilt, 0deg));
+  transform-origin: top center;
 }
 
 .topper-stick {
@@ -241,6 +262,8 @@ button:focus-visible, a:focus-visible {
 
 .stage-slot:hover { transform: translate(-50%, -50%) scale(1.11); background: #fff; color: #633595; }
 .stage-slot:active { transform: translate(-50%, -50%) scale(.94); }
+.stage-crowded .stage-slot { width: max(23px, calc(var(--flag-width) * 100cqw / 684)); }
+.stage-crowded .topper-stick { width: clamp(1px, .38cqw, 3px); }
 
 .photo-flag {
   width: calc(var(--flag-width) * 100cqw / 684);
@@ -322,12 +345,12 @@ button:focus-visible, a:focus-visible {
 }
 
 .slot-hint { margin: 7px 0 17px; color: var(--muted); font-size: 13px; }
-.slot-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 11px 13px; justify-items: center; }
+.slot-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 9px 7px; justify-items: center; }
 
 .photo-slot {
   position: relative;
   display: grid;
-  width: min(100%, 56px);
+  width: min(100%, 52px);
   aspect-ratio: 1;
   place-items: center;
   overflow: hidden;
@@ -459,9 +482,9 @@ button:focus-visible, a:focus-visible {
   .header-inner { padding-inline: 32px; }
   .main-content { width: calc(100% - 60px); }
   .builder { gap: 16px; }
+  .cake-board-crowded .preview-tag { display: none; }
   .controls { padding: 23px 21px 13px; }
   .swatch { width: 36px; }
-  .photo-slot { width: min(100%, 52px); }
   .frosting-section { padding-bottom: 20px; }
   .photo-section { padding-block: 18px; }
 }
@@ -483,13 +506,17 @@ button:focus-visible, a:focus-visible {
   .preview-tag span { width: 6px; height: 6px; }
   .preview-foot { right: 7px; bottom: 5px; font-size: 10px; }
   .preview-foot svg { width: 12px; }
+  .preview-add { left: 7px; bottom: 5px; min-height: 32px; font-size: 11px; }
   .controls { border-radius: 19px; padding: 17px 17px 10px; }
   .swatch-list { justify-content: start; gap: clamp(10px, 4vw, 20px); margin-block: 15px 2px; }
   .swatch { width: clamp(31px, 9vw, 42px); }
   .photo-section { padding-block: 17px; }
   .slot-grid { max-width: 360px; margin-inline: auto; }
-  .photo-slot { width: min(100%, 53px); min-height: 44px; }
   .page-footer { padding-block: 15px 19px; }
+}
+
+@media (max-width: 345px) {
+  .slot-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 
 @media (prefers-reduced-motion: reduce) {
