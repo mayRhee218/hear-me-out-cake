@@ -1,3 +1,5 @@
+import PngWorker from './png.worker?worker&inline';
+
 export type CakePhoto = {
   name: string;
   source: string;
@@ -118,8 +120,40 @@ export async function preparePhoto(file: File): Promise<CakePhoto> {
   }
 }
 
+async function encodePngInWorker(canvas: HTMLCanvasElement): Promise<Blob | null> {
+  const bitmap = await createImageBitmap(canvas);
+  try {
+    const worker = new PngWorker();
+    try {
+      return await new Promise<Blob | null>((resolve) => {
+        worker.onmessage = ({ data }) => resolve(data instanceof Blob ? data : null);
+        worker.onmessageerror = () => resolve(null);
+        worker.onerror = (event) => {
+          event.preventDefault();
+          resolve(null);
+        };
+        worker.postMessage(bitmap, [bitmap]);
+      });
+    } finally {
+      worker.terminate();
+    }
+  } finally {
+    bitmap.close();
+  }
+}
+
 export async function downloadCake(canvas: HTMLCanvasElement): Promise<void> {
-  const png = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/png'));
+  let png: Blob | null = null;
+  if (window.parent !== window && typeof OffscreenCanvas === 'function' && typeof createImageBitmap === 'function') {
+    try {
+      // HTML canvas encoding can be delayed while a framed document waits for idle time.
+      png = await encodePngInWorker(canvas);
+    } catch {
+      // Use the standard encoder when the browser cannot start the inline worker.
+    }
+  }
+
+  png ??= await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/png'));
   if (!png) {
     throw new Error('The cake image couldn’t be saved.');
   }
