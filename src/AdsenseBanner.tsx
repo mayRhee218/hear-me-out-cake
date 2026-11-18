@@ -99,7 +99,9 @@ export function AdsenseBanner() {
     <section className="adsense-banner" ref={banner}
       aria-label={failed ? undefined : 'Advertisement'} aria-hidden={failed || undefined}>
       {!failed && <ins className="adsbygoogle adsense-banner__slot" ref={slot}
-        data-ad-client={adClient} data-ad-slot={adSlot} />}
+        style={{ display: 'block' }}
+        data-ad-client={adClient} data-ad-slot={adSlot}
+        data-ad-format="auto" data-full-width-responsive="true" />}
     </section>
   )
 }
