@@ -93,15 +93,14 @@ export function AdsenseBanner() {
     }
   }, [])
 
-  if (!isConfigured) return null
+  if (!isConfigured || failed) return null
 
   return (
-    <section className="adsense-banner" ref={banner}
-      aria-label={failed ? undefined : 'Advertisement'} aria-hidden={failed || undefined}>
-      {!failed && <ins className="adsbygoogle adsense-banner__slot" ref={slot}
+    <section className="adsense-banner" ref={banner} aria-label="Advertisement">
+      <ins className="adsbygoogle adsense-banner__slot" ref={slot}
         style={{ display: 'block' }}
         data-ad-client={adClient} data-ad-slot={adSlot}
-        data-ad-format="auto" data-full-width-responsive="true" />}
+        data-ad-format="auto" data-full-width-responsive="true" />
     </section>
   )
 }

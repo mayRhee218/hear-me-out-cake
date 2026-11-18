@@ -4,13 +4,37 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#fcfaf7" />
-    <meta name="description" content="Pick a frosting, add up to 20 photos, and make your own Hear Me Out Cake." />
+    <meta name="description" content="Pick a frosting, add up to 15 photos, and make your own Hear Me Out Cake." />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>Hear Me Out Cake</title>
   </head>
   <body>
     <iframe id="cake-editor" class="editor-frame" src="./editor.html" title="Hear Me Out Cake editor"
       sandbox="allow-scripts allow-downloads"></iframe>
+    <script>
+      (() => {
+        const editor = document.getElementById('cake-editor')
+        const requestHeight = () => editor.contentWindow?.postMessage('measure-cake-editor', '*')
+
+        window.addEventListener('message', (event) => {
+          if (event.source !== editor.contentWindow || event.origin !== 'null') return
+
+          const { type, height } = event.data ?? {}
+          if (type !== 'cake-editor-height' || !Number.isInteger(height) || height < 1 || height > 4000) return
+
+          editor.style.height = `${height}px`
+        })
+
+        editor.addEventListener('load', requestHeight)
+        window.addEventListener('resize', requestHeight)
+        window.addEventListener('pageshow', requestHeight)
+        window.addEventListener('focus', requestHeight)
+        document.addEventListener('visibilitychange', () => {
+          if (document.visibilityState === 'visible') requestHeight()
+        })
+        requestHeight()
+      })()
+    </script>
     <footer class="main-content page-footer mx-auto">
       <p>Your photos stay on this device.</p>
       <a class="privacy-link" href="./privacy.html">Privacy Policy</a>

@@ -1,12 +1,19 @@
 .adsense-banner {
   box-sizing: border-box;
+  display: flow-root;
   width: 100%;
   max-width: 970px;
-  min-height: 106px;
-  margin: 12px auto 0;
-  padding-bottom: 16px;
+  margin-inline: auto;
+}
+
+.adsense-banner__slot {
+  min-height: 1px;
+}
+
+.adsense-banner__slot:is([data-ad-status='filled'], [data-ad-status='unfill-optimized']) {
+  margin-block-start: 12px;
 }
 
 .adsense-banner__slot[data-ad-status='unfilled'] {
-  visibility: hidden;
+  display: none !important;
 }

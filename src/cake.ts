@@ -29,26 +29,21 @@ export const TOPPER_LAYOUT: TopperLayout = {
   positions: [
     // Fill the top first, beginning with the center and moving outward.
     { x: 0.5, y: 0.318, targetX: 0.5, targetY: 0.472, tilt: -3 },
-    { x: 0.405, y: 0.207, targetX: 0.409, targetY: 0.424, tilt: -6 },
-    { x: 0.591, y: 0.205, targetX: 0.586, targetY: 0.42, tilt: 5 },
+    { x: 0.319, y: 0.216, targetX: 0.36, targetY: 0.427, tilt: -6 },
+    { x: 0.681, y: 0.217, targetX: 0.64, targetY: 0.427, tilt: 5 },
     { x: 0.368, y: 0.331, targetX: 0.388, targetY: 0.481, tilt: -5 },
     { x: 0.631, y: 0.334, targetX: 0.618, targetY: 0.481, tilt: 6 },
     { x: 0.502, y: 0.072, targetX: 0.501, targetY: 0.376, tilt: 2 },
     { x: 0.352, y: 0.093, targetX: 0.368, targetY: 0.393, tilt: -7 },
     { x: 0.648, y: 0.094, targetX: 0.638, targetY: 0.392, tilt: 6 },
-    { x: 0.225, y: 0.218, targetX: 0.321, targetY: 0.428, tilt: -8 },
-    { x: 0.771, y: 0.221, targetX: 0.677, targetY: 0.428, tilt: 8 },
-    { x: 0.235, y: 0.343, targetX: 0.27, targetY: 0.476, tilt: -7 },
-    { x: 0.762, y: 0.345, targetX: 0.737, targetY: 0.478, tilt: 5 },
+    { x: 0.498, y: 0.197, targetX: 0.5, targetY: 0.423, tilt: -2 },
     // Side sticks end in the buttercream, above the plate and stand.
     { x: 0.132, y: 0.427, targetX: 0.25, targetY: 0.469, tilt: -9 },
     { x: 0.871, y: 0.426, targetX: 0.751, targetY: 0.47, tilt: 7 },
     { x: 0.107, y: 0.545, targetX: 0.258, targetY: 0.549, tilt: -5 },
     { x: 0.891, y: 0.545, targetX: 0.742, targetY: 0.55, tilt: 6 },
-    { x: 0.127, y: 0.657, targetX: 0.249, targetY: 0.643, tilt: 6 },
-    { x: 0.868, y: 0.657, targetX: 0.751, targetY: 0.646, tilt: -5 },
-    { x: 0.176, y: 0.776, targetX: 0.29, targetY: 0.707, tilt: -8 },
-    { x: 0.826, y: 0.775, targetX: 0.711, targetY: 0.705, tilt: 7 },
+    { x: 0.127, y: 0.674, targetX: 0.249, targetY: 0.643, tilt: 6 },
+    { x: 0.868, y: 0.674, targetX: 0.751, targetY: 0.646, tilt: -5 },
   ],
 };
 

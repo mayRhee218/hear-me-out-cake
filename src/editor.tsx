@@ -17,8 +17,12 @@ if (window.parent !== window) {
     window.parent.postMessage({ type: 'cake-editor-height', height }, '*')
   }
 
-  const resizeObserver = new ResizeObserver(() => reportHeight())
-  resizeObserver.observe(editor)
+  if (typeof ResizeObserver === 'function') {
+    const resizeObserver = new ResizeObserver(() => reportHeight())
+    resizeObserver.observe(editor)
+  }
+  window.addEventListener('resize', () => reportHeight())
+  window.addEventListener('pageshow', () => reportHeight(true))
   window.addEventListener('message', (event) => {
     if (event.source === window.parent && event.data === 'measure-cake-editor') reportHeight(true)
   })
