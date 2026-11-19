@@ -124,7 +124,7 @@ function CakeBoard({ frosting, topperCount, photos, busy, onSlot, onImage, onArt
 
 export function App() {
   const [frosting, setFrosting] = useState<Frosting>(FROSTINGS[0])
-  const [topperCount, setTopperCount] = useState<TopperCount>(15)
+  const [topperCount, setTopperCount] = useState<TopperCount>(7)
   const [photos, setPhotos] = useState<(CakePhoto | null)[]>(emptyCake)
   const [busy, setBusy] = useState<number[]>([])
   const [cakeArt, setCakeArt] = useState<HTMLImageElement | null>(null)
