@@ -191,6 +191,10 @@ button:focus-visible, a:focus-visible {
 .sparkle-right { top: 81%; right: 15%; font-size: clamp(12px, 2.7cqw, 21px); transform: rotate(9deg); }
 .sparkle-small { top: 77%; right: 19%; color: #c8a2d9; font-size: 16px; }
 .sparkle-tiny { top: 83%; left: 20%; color: #cca7dc; font-size: 25px; }
+.cake-board-classic .sparkle-left { top: 51%; left: 15%; }
+.cake-board-classic .sparkle-right { top: 42%; right: 14%; }
+.cake-board-classic .sparkle-small { top: 36%; right: 18%; }
+.cake-board-classic .sparkle-tiny { top: 56%; left: 19%; }
 
 .topper-position { position: absolute; inset: 0; pointer-events: none; }
 .topper-stick, .photo-flag { animation: insert-topper 370ms cubic-bezier(.24,.74,.28,1) both; }
@@ -210,6 +214,7 @@ button:focus-visible, a:focus-visible {
   background: linear-gradient(90deg, #986952, #f9e0c3 40%, #f7e5d4 55%, #b78566);
   box-shadow: 1px 1px 2px #63324a49;
 }
+.cake-board-classic .topper-stick { width: clamp(2px, .6cqw, 5px); }
 
 .topper-stick::after {
   position: absolute;
@@ -250,6 +255,8 @@ button:focus-visible, a:focus-visible {
   transition: transform 190ms ease, color 190ms ease, background 190ms ease;
 }
 
+.cake-board-classic .stage-slot { width: clamp(29px, 7.5cqw, 50px); }
+.cake-board-classic .stage-slot svg { width: 18px; }
 .stage-slot svg { width: clamp(12px, 2.35cqw, 18px); height: auto; }
 .stage-slot:focus-visible, .photo-flag:focus-visible { z-index: 3; }
 .stage-slot:hover { transform: translate(-50%, -50%) scale(1.11); background: #fff; color: #633595; }
@@ -336,6 +343,7 @@ button:focus-visible, a:focus-visible {
 
 .slot-hint { margin: 7px 0 17px; color: var(--muted); font-size: 13px; }
 .slot-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 9px 7px; justify-items: center; }
+.slot-grid-classic { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 11px 13px; }
 
 .photo-slot {
   position: relative;
@@ -356,6 +364,41 @@ button:focus-visible, a:focus-visible {
 .photo-slot:active { transform: scale(.94); }
 .photo-slot.is-filled { border: 2px solid #dcc5ed; background: #eee0f4; }
 .photo-slot img { animation: show-photo 250ms ease both; }
+
+.topper-count-control {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 17px;
+}
+
+.topper-count-label { color: #4e375e; font-size: 13px; font-weight: 700; }
+
+.topper-count-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(44px, 1fr));
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid #ede1f2;
+  border-radius: 12px;
+  background: #f7effa;
+}
+
+.topper-count-option {
+  min-height: 40px;
+  padding: 0 10px;
+  border-radius: 8px;
+  color: #725186;
+  font-size: 14px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  transition: background 160ms ease, color 160ms ease;
+}
+
+.topper-count-option:hover { background: #eee0f4; }
+.topper-count-option[aria-pressed='true'] { background: var(--action); color: #fff; }
+.layout-hint { margin: 8px 0 0; color: var(--muted); font-size: 12px; }
 .error-message { margin: 13px 0 0; color: #a23850; font-size: 13px; line-height: 1.35; }
 .control-actions { display: grid; gap: 5px; margin-top: auto; padding-top: 16px; border-top: 1px solid var(--line); }
 
@@ -493,6 +536,7 @@ button:focus-visible, a:focus-visible {
   .builder { grid-template-columns: 1fr; gap: 13px; }
   .cake-board { border-radius: 20px; }
   .preview-tag { top: auto; bottom: 7px; left: 9px; padding: 5px 8px; font-size: 10px; }
+  .cake-board-classic .preview-tag { top: 11px; bottom: auto; left: 11px; }
   .preview-tag span { width: 6px; height: 6px; }
   .preview-foot { right: 7px; bottom: 5px; font-size: 10px; }
   .preview-foot svg { width: 12px; }

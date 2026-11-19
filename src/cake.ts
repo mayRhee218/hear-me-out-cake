@@ -24,30 +24,76 @@ type TopperPosition = {
 type FlagDimensions = { width: number; height: number; border: number; radius: number };
 type TopperLayout = { positions: readonly TopperPosition[]; flag: FlagDimensions };
 
-export const TOPPER_LAYOUT: TopperLayout = {
-  flag: { width: 64, height: 54, border: 3.5, radius: 10 },
-  positions: [
-    // Fill the top first, beginning with the center and moving outward.
-    { x: 0.5, y: 0.318, targetX: 0.5, targetY: 0.472, tilt: -3 },
-    { x: 0.319, y: 0.216, targetX: 0.36, targetY: 0.427, tilt: -6 },
-    { x: 0.681, y: 0.217, targetX: 0.64, targetY: 0.427, tilt: 5 },
-    { x: 0.368, y: 0.331, targetX: 0.388, targetY: 0.481, tilt: -5 },
-    { x: 0.631, y: 0.334, targetX: 0.618, targetY: 0.481, tilt: 6 },
-    { x: 0.502, y: 0.072, targetX: 0.501, targetY: 0.376, tilt: 2 },
-    { x: 0.352, y: 0.093, targetX: 0.368, targetY: 0.393, tilt: -7 },
-    { x: 0.648, y: 0.094, targetX: 0.638, targetY: 0.392, tilt: 6 },
-    { x: 0.498, y: 0.197, targetX: 0.5, targetY: 0.423, tilt: -2 },
-    // Side sticks end in the buttercream, above the plate and stand.
-    { x: 0.132, y: 0.427, targetX: 0.25, targetY: 0.469, tilt: -9 },
-    { x: 0.871, y: 0.426, targetX: 0.751, targetY: 0.47, tilt: 7 },
-    { x: 0.107, y: 0.545, targetX: 0.258, targetY: 0.549, tilt: -5 },
-    { x: 0.891, y: 0.545, targetX: 0.742, targetY: 0.55, tilt: 6 },
-    { x: 0.127, y: 0.674, targetX: 0.249, targetY: 0.643, tilt: 6 },
-    { x: 0.868, y: 0.674, targetX: 0.751, targetY: 0.646, tilt: -5 },
-  ],
+export const TOPPER_COUNTS = [7, 15, 20] as const;
+export type TopperCount = (typeof TOPPER_COUNTS)[number];
+
+const topperLayouts: Record<TopperCount, TopperLayout> = {
+  7: {
+    flag: { width: 70, height: 63, border: 4, radius: 12 },
+    positions: [
+      { x: 0.5, y: 0.173, targetX: 0.5, targetY: 0.397, tilt: -4 },
+      { x: 0.416, y: 0.315, targetX: 0.416, targetY: 0.487, tilt: -7 },
+      { x: 0.584, y: 0.315, targetX: 0.584, targetY: 0.487, tilt: 5 },
+      { x: 0.334, y: 0.214, targetX: 0.334, targetY: 0.418, tilt: -7 },
+      { x: 0.666, y: 0.214, targetX: 0.666, targetY: 0.418, tilt: 8 },
+      { x: 0.255, y: 0.342, targetX: 0.255, targetY: 0.443, tilt: -9 },
+      { x: 0.745, y: 0.342, targetX: 0.745, targetY: 0.443, tilt: 8 },
+    ],
+  },
+  15: {
+    flag: { width: 64, height: 54, border: 3.5, radius: 10 },
+    positions: [
+      // Fill the top first, beginning with the center and moving outward.
+      { x: 0.5, y: 0.318, targetX: 0.5, targetY: 0.472, tilt: -3 },
+      { x: 0.319, y: 0.216, targetX: 0.36, targetY: 0.427, tilt: -6 },
+      { x: 0.681, y: 0.217, targetX: 0.64, targetY: 0.427, tilt: 5 },
+      { x: 0.368, y: 0.331, targetX: 0.388, targetY: 0.481, tilt: -5 },
+      { x: 0.631, y: 0.334, targetX: 0.618, targetY: 0.481, tilt: 6 },
+      { x: 0.502, y: 0.072, targetX: 0.501, targetY: 0.376, tilt: 2 },
+      { x: 0.352, y: 0.093, targetX: 0.368, targetY: 0.393, tilt: -7 },
+      { x: 0.648, y: 0.094, targetX: 0.638, targetY: 0.392, tilt: 6 },
+      { x: 0.498, y: 0.197, targetX: 0.5, targetY: 0.423, tilt: -2 },
+      // Side sticks end in the buttercream, above the plate and stand.
+      { x: 0.132, y: 0.427, targetX: 0.25, targetY: 0.469, tilt: -9 },
+      { x: 0.871, y: 0.426, targetX: 0.751, targetY: 0.47, tilt: 7 },
+      { x: 0.107, y: 0.545, targetX: 0.258, targetY: 0.549, tilt: -5 },
+      { x: 0.891, y: 0.545, targetX: 0.742, targetY: 0.55, tilt: 6 },
+      { x: 0.127, y: 0.674, targetX: 0.249, targetY: 0.643, tilt: 6 },
+      { x: 0.868, y: 0.674, targetX: 0.751, targetY: 0.646, tilt: -5 },
+    ],
+  },
+  20: {
+    flag: { width: 64, height: 54, border: 3.5, radius: 10 },
+    positions: [
+      // Fill the top first, beginning with the center and moving outward.
+      { x: 0.5, y: 0.318, targetX: 0.5, targetY: 0.472, tilt: -3 },
+      { x: 0.405, y: 0.207, targetX: 0.409, targetY: 0.424, tilt: -6 },
+      { x: 0.591, y: 0.205, targetX: 0.586, targetY: 0.42, tilt: 5 },
+      { x: 0.368, y: 0.331, targetX: 0.388, targetY: 0.481, tilt: -5 },
+      { x: 0.631, y: 0.334, targetX: 0.618, targetY: 0.481, tilt: 6 },
+      { x: 0.502, y: 0.072, targetX: 0.501, targetY: 0.376, tilt: 2 },
+      { x: 0.352, y: 0.093, targetX: 0.368, targetY: 0.393, tilt: -7 },
+      { x: 0.648, y: 0.094, targetX: 0.638, targetY: 0.392, tilt: 6 },
+      { x: 0.225, y: 0.218, targetX: 0.321, targetY: 0.428, tilt: -8 },
+      { x: 0.771, y: 0.221, targetX: 0.677, targetY: 0.428, tilt: 8 },
+      { x: 0.235, y: 0.343, targetX: 0.27, targetY: 0.476, tilt: -7 },
+      { x: 0.762, y: 0.345, targetX: 0.737, targetY: 0.478, tilt: 5 },
+      // Side sticks end in the buttercream, above the plate and stand.
+      { x: 0.132, y: 0.427, targetX: 0.25, targetY: 0.469, tilt: -9 },
+      { x: 0.871, y: 0.426, targetX: 0.751, targetY: 0.47, tilt: 7 },
+      { x: 0.107, y: 0.545, targetX: 0.258, targetY: 0.549, tilt: -5 },
+      { x: 0.891, y: 0.545, targetX: 0.742, targetY: 0.55, tilt: 6 },
+      { x: 0.127, y: 0.657, targetX: 0.249, targetY: 0.643, tilt: 6 },
+      { x: 0.868, y: 0.657, targetX: 0.751, targetY: 0.646, tilt: -5 },
+      { x: 0.176, y: 0.776, targetX: 0.29, targetY: 0.707, tilt: -8 },
+      { x: 0.826, y: 0.775, targetX: 0.711, targetY: 0.705, tilt: 7 },
+    ],
+  },
 };
 
-export const TOPPER_COUNT = TOPPER_LAYOUT.positions.length;
+export function getTopperLayout(count: TopperCount): TopperLayout {
+  return topperLayouts[count];
+}
 
 const CAKE_BOUNDS = { x: 0.205, y: 0.29, width: 0.59, height: 0.64 };
 const STAGE_COLOR = '#f3edf9';
@@ -236,6 +282,7 @@ export async function renderCakeExport(
   image: HTMLImageElement,
   frosting: Frosting,
   photos: readonly (CakePhoto | null)[],
+  count: TopperCount,
 ): Promise<HTMLCanvasElement> {
   const canvas = document.createElement('canvas');
   const { width, height } = CAKE_SCENE;
@@ -244,7 +291,8 @@ export async function renderCakeExport(
   const context = canvas.getContext('2d');
   if (!context) throw new Error('Cake downloads are unavailable in this browser.');
 
-  const toppers = await Promise.all(TOPPER_LAYOUT.positions.map(async (position, index) => {
+  const layout = getTopperLayout(count);
+  const toppers = await Promise.all(layout.positions.map(async (position, index) => {
     const photo = photos[index];
     if (!photo) return null;
 
@@ -261,6 +309,6 @@ export async function renderCakeExport(
   context.fillRect(0, 0, width, height);
   drawCakeArt(context, image, frosting);
   for (const { position } of visibleToppers) drawStick(context, position);
-  for (const { position, flag } of visibleToppers) drawFlag(context, position, flag, TOPPER_LAYOUT.flag);
+  for (const { position, flag } of visibleToppers) drawFlag(context, position, flag, layout.flag);
   return canvas;
 }
